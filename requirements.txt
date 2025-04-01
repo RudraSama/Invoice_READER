@@ -1,0 +1,5 @@
+flask
+together
+requests
+dotenv
+mysql-connector-python
