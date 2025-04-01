@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Text Extractor</title>
+    <script>
+        function uploadImage() {
+            let formData = new FormData();
+            let fileInput = document.getElementById("invoice");
+            if (fileInput.files.length === 0) {
+                alert("Please select a file.");
+                return;
+            }
+            
+            formData.append("image", fileInput.files[0]);
+            
+            fetch("/process_image", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("extractedText").innerText = data.extracted_text || "No text extracted";
+                document.getElementById("jsonOutput").innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while processing the image.");
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Upload Invoice</h2>
+    <input type="file" id="invoice" accept="image/*">
+    <button onclick="uploadImage()">Upload</button>
+    
+    <h3>Extracted Text:</h3>
+    <p id="extractedText">(Extracted text will appear here)</p>
+    
+    <h3>JSON Output:</h3>
+    <pre id="jsonOutput">(JSON response will appear here)</pre>
+</body>
+</html>
